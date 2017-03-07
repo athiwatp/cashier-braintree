@@ -2,7 +2,7 @@
 
 namespace Laravel\Cashier;
 
-use DOMPDF;
+use Dompdf\Dompdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
@@ -236,7 +236,7 @@ class Invoice
             require_once $configPath;
         }
 
-        $dompdf = new DOMPDF;
+        $dompdf = new Dompdf();
 
         $dompdf->load_html($this->view($data)->render());
 
