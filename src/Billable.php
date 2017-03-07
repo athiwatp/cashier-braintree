@@ -140,7 +140,7 @@ trait Billable
         return $this->subscriptions->sortByDesc(function ($value) {
             return $value->created_at->getTimestamp();
         })
-        ->first(function ($value) use ($subscription) {
+        ->first(function ($key, $value) use ($subscription) {
             return $value->name === $subscription;
         });
     }
@@ -220,10 +220,10 @@ trait Billable
         $customer = $this->asBraintreeCustomer();
 
         $parameters = array_merge([
-            'id' => TransactionSearch::customerId()->is($customer->id),
-            'range' => TransactionSearch::createdAt()->between(
-                Carbon::today()->subYears(2)->format('m/d/Y H:i'),
-                Carbon::tomorrow()->format('m/d/Y H:i')
+            TransactionSearch::customerId()->is($customer->id),
+            TransactionSearch::createdAt()->between(
+                Carbon::today()->subYears(2)->format('m/d/Y H:s'),
+                Carbon::tomorrow()->format('m/d/Y H:s')
             ),
         ], $parameters);
 
@@ -358,7 +358,7 @@ trait Billable
      */
     public function onPlan($plan)
     {
-        return ! is_null($this->subscriptions->first(function ($value) use ($plan) {
+        return ! is_null($this->subscriptions->first(function ($key, $value) use ($plan) {
             return $value->braintree_plan === $plan;
         }));
     }
